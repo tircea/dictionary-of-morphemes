@@ -1,0 +1,14 @@
+{
+  "name": "morphology-analyzer",
+  "version": "1.0.0",
+  "description": "Ukrainian morphology analyzer with frontend and backend",
+  "scripts": {
+    "start": "node scripts/start.js",
+    "start:backend": "cd backend && npm run dev",
+    "start:frontend": "cd frontend && npm start",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
