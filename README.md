@@ -56,7 +56,7 @@ MainProject/
 1. Клонуйте репозиторій
    ```
    git clone <url-репозиторію>
-   cd MainProject
+   cd dictionary-of-morphemes
    ```
 
 2. Встановіть залежності для бекенду
