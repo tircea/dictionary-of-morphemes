@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-const SearchBar = ({ onSearch, searchMode, onModeChange }) => {
+const SearchBar = ({ onSearch, searchMode, onModeChange, hideToggleButtons = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
@@ -48,36 +48,38 @@ const SearchBar = ({ onSearch, searchMode, onModeChange }) => {
 
   return (
     <Box sx={{ width: '100%', maxWidth: 600, margin: '0 auto' }}>
-      <Box sx={{ mb: 2 }}>
-        <ToggleButtonGroup
-          value={searchMode}
-          exclusive
-          onChange={(e, newMode) => newMode && onModeChange(newMode)}
-          aria-label="search mode"
-          fullWidth
-          sx={{
-            '& .MuiToggleButton-root': {
-              py: 1.5,
-              fontSize: '1rem',
-              fontWeight: 500,
-              '&.Mui-selected': {
-                backgroundColor: 'primary.main',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: 'primary.dark',
+      {!hideToggleButtons && (
+        <Box sx={{ mb: 2 }}>
+          <ToggleButtonGroup
+            value={searchMode}
+            exclusive
+            onChange={(e, newMode) => newMode && onModeChange(newMode)}
+            aria-label="search mode"
+            fullWidth
+            sx={{
+              '& .MuiToggleButton-root': {
+                py: 1.5,
+                fontSize: '1rem',
+                fontWeight: 500,
+                '&.Mui-selected': {
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                  }
                 }
               }
-            }
-          }}
-        >
-          <ToggleButton value="word" aria-label="word search">
-            Пошук за словом
-          </ToggleButton>
-          <ToggleButton value="component" aria-label="component search">
-            Пошук за компонентами
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
+            }}
+          >
+            <ToggleButton value="word" aria-label="word search">
+              Пошук за словом
+            </ToggleButton>
+            <ToggleButton value="component" aria-label="component search">
+              Пошук за компонентами
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      )}
       
       <Paper
         component="form"

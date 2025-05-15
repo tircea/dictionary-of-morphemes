@@ -12,7 +12,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  CircularProgress
+  CircularProgress,
+  Tooltip
 } from '@mui/material';
 import { getAllComponents, searchByComponent } from '../api';
 
@@ -47,13 +48,26 @@ const ComponentSearch = ({ onWordSelect }) => {
       setSelectedComponent(id);
       setLoading(true);
       const result = await searchByComponent(componentType, id);
-      setWords(result?.words?.words || []);
+      setWords(result?.words || []);
     } catch (error) {
       console.error('Error searching by component:', error);
       setWords([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to get a preview of morphological alterations
+  const getMorphologicalPreview = (word) => {
+    if (!word.morphologicalAlternation || word.morphologicalAlternation.length === 0) {
+      return null;
+    }
+    
+    // Get the first process text to show as preview
+    const firstProcess = word.morphologicalAlternation[0].morphology_process;
+    if (!firstProcess) return null;
+    
+    return firstProcess;
   };
 
   return (
@@ -119,18 +133,35 @@ const ComponentSearch = ({ onWordSelect }) => {
                 </Box>
               ) : (
                 <List>
-                  {Array.isArray(words) && words.map((word) => (
-                    <ListItem
-                      key={word.id}
-                      button
-                      onClick={() => onWordSelect(word)}
-                    >
-                      <ListItemText 
-                        primary={word.basic_word}
-                        secondary={word.split_word}
-                      />
-                    </ListItem>
-                  ))}
+                  {Array.isArray(words) && words.map((word) => {
+                    const morphologicalPreview = getMorphologicalPreview(word);
+                    
+                    return (
+                      <ListItem
+                        key={word.id}
+                        button
+                        onClick={() => onWordSelect(word)}
+                      >
+                        <ListItemText 
+                          primary={word.basic_word}
+                          secondary={
+                            <>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {word.split_word}
+                              </Typography>
+                              {morphologicalPreview && (
+                                <Tooltip title="Морфологічна альтернація">
+                                  <Typography component="span" variant="body2" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                                    Процес: {morphologicalPreview}
+                                  </Typography>
+                                </Tooltip>
+                              )}
+                            </>
+                          }
+                        />
+                      </ListItem>
+                    );
+                  })}
                 </List>
               )}
             </CardContent>

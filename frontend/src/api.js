@@ -22,6 +22,18 @@ export const searchByComponent = async (type, id) => {
   }
 };
 
+export const getWordsByLetter = async (letter, page = 0, limit = 100) => {
+  try {
+    const response = await axios.get(`${API_URL}/words/letter/${letter}`, {
+      params: { page, limit }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error getting words by letter:', error);
+    throw error;
+  }
+};
+
 export const getAllComponents = async (type) => {
   try {
     const response = await axios.get(`${API_URL}/components/${type}`);

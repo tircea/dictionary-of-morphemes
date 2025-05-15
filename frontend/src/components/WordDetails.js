@@ -16,6 +16,9 @@ import { Close as CloseIcon } from '@mui/icons-material';
 const ExplanationModal = ({ open, onClose, component }) => {
   if (!component) return null;
 
+  // Определяем, является ли компонент корнем
+  const isRoot = Boolean(component.identification_root || component.secondary_root);
+
   return (
     <Modal
       open={open}
@@ -40,6 +43,7 @@ const ExplanationModal = ({ open, onClose, component }) => {
           <Typography variant="h5" component="h2" id="explanation-modal-title">
             {component.identification_prefix || 
              component.identification_root || 
+             component.secondary_root ||
              component.identification_suffix}
             {component.allomorph && (
               <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
@@ -53,17 +57,56 @@ const ExplanationModal = ({ open, onClose, component }) => {
         </Box>
 
         <Box>
-          <Typography variant="h6" gutterBottom>
-            Пояснення:
-          </Typography>
-          <Paper 
-            sx={{ 
-              p: 2,
-              backgroundColor: 'grey.50',
-            }}
-          >
-            <Typography>{component.explanation}</Typography>
-          </Paper>
+          {isRoot ? (
+            // Для корней показываем только пример
+            component.example && (
+              <>
+                <Typography variant="h6" gutterBottom>
+                  Приклад:
+                </Typography>
+                <Paper 
+                  sx={{ 
+                    p: 2,
+                    backgroundColor: 'grey.50',
+                  }}
+                >
+                  <Typography>{component.example}</Typography>
+                </Paper>
+                {component.secondary_example && (
+                  <>
+                    <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                      Приклад вторинного кореня:
+                    </Typography>
+                    <Paper 
+                      sx={{ 
+                        p: 2,
+                        backgroundColor: 'grey.50',
+                      }}
+                    >
+                      <Typography>{component.secondary_example}</Typography>
+                    </Paper>
+                  </>
+                )}
+              </>
+            )
+          ) : (
+            // Для префиксов и суффиксов показываем объяснение
+            component.explanation && (
+              <>
+                <Typography variant="h6" gutterBottom>
+                  Пояснення:
+                </Typography>
+                <Paper 
+                  sx={{ 
+                    p: 2,
+                    backgroundColor: 'grey.50',
+                  }}
+                >
+                  <Typography>{component.explanation}</Typography>
+                </Paper>
+              </>
+            )
+          )}
           
           <Alert severity="info" sx={{ mt: 2, fontSize: '0.875rem' }}>
             Увага! Інформація може бути неточною та потребує перевірки вручну.
@@ -165,6 +208,55 @@ const WordDetails = ({ word }) => {
     );
   };
 
+  // Функция для рендера морфологических альтернаций
+  const renderMorphologicalAlternation = (morphologicalAlternation) => {
+    if (!morphologicalAlternation || morphologicalAlternation.length === 0) return null;
+
+    return (
+      <Paper sx={{ p: 3, mb: 2, borderRadius: 2, boxShadow: 2 }}>
+        <Typography 
+          variant="h6" 
+          color="primary" 
+          gutterBottom
+          sx={{ 
+            fontWeight: 500,
+            display: 'flex',
+            alignItems: 'center',
+            '&::before': {
+              content: '""',
+              width: 4,
+              height: 24,
+              backgroundColor: 'primary.main',
+              marginRight: 2,
+              borderRadius: 1
+            }
+          }}
+        >
+          Морфологічні альтернації
+        </Typography>
+        {morphologicalAlternation.map((item, index) => (
+          <Box key={index} sx={{ mb: 2 }}>
+            {item.morphology_process && (
+              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
+                Процес: {item.morphology_process}
+              </Typography>
+            )}
+            {item.meaning && (
+              <Typography variant="body2" color="text.secondary">
+                Значення: {item.meaning}
+              </Typography>
+            )}
+            {item.explanation && (
+              <Typography variant="body2" color="text.secondary">
+                Пояснення: {item.explanation}
+              </Typography>
+            )}
+          </Box>
+        ))}
+      </Paper>
+    );
+  };
+
   return (
     <>
       <Card 
@@ -222,6 +314,7 @@ const WordDetails = ({ word }) => {
           {renderComponent('Префікси', word.prefixes)}
           {renderComponent('Корені', word.roots)}
           {renderComponent('Суфікси', word.suffixes)}
+          {renderMorphologicalAlternation(word.morphologicalAlternation)}
 
           {word.gender && (
             <Box sx={{ 

@@ -3,6 +3,7 @@ const {
   searchSimilarWords, 
   searchByComponent, 
   getAllComponents,
+  getWordsByLetter,
   sanitizeWord
 } = require('./database');
 
@@ -33,8 +34,21 @@ function setupRoutes(app) {
   app.get('/api/search/:type/:id', async (req, res) => {
     try {
       const { type, id } = req.params;
-      const words = await searchByComponent(type, id);
-      res.json({ words });
+      const result = await searchByComponent(type, id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/words/letter/:letter', async (req, res) => {
+    try {
+      const { letter } = req.params;
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 100;
+      
+      const result = await getWordsByLetter(letter, page, limit);
+      res.json(result);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
