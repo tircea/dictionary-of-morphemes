@@ -49,6 +49,7 @@ const ComponentSearch = ({ onWordSelect }) => {
       setLoading(true);
       const result = await searchByComponent(componentType, id);
       setWords(result?.words || []);
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error('Error searching by component:', error);
       setWords([]);
@@ -57,13 +58,11 @@ const ComponentSearch = ({ onWordSelect }) => {
     }
   };
 
-  // Function to get a preview of morphological alterations
+
   const getMorphologicalPreview = (word) => {
     if (!word.morphologicalAlternation || word.morphologicalAlternation.length === 0) {
       return null;
     }
-    
-    // Get the first process text to show as preview
     const firstProcess = word.morphologicalAlternation[0].morphology_process;
     if (!firstProcess) return null;
     

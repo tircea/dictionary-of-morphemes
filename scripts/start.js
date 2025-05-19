@@ -1,28 +1,38 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-function startProcess(command, args, cwd) {
-  const options = {
-    cwd: path.resolve(__dirname, '..', cwd),
-    shell: true,
-    stdio: 'inherit'
-  };
+console.log('Starting development servers...');
 
-  const process = spawn(command, args, options);
-  
-  process.on('error', (error) => {
-    console.error(`Error starting ${cwd}:`, error);
-  });
+// Start backend
+const backendProcess = spawn('npm', ['run', 'start:backend'], {
+  cwd: path.join(__dirname, '..'),
+  stdio: 'inherit',
+  shell: true
+});
 
-  return process;
-}
+// Start frontend
+const frontendProcess = spawn('npm', ['run', 'start:frontend'], {
+  cwd: path.join(__dirname, '..'),
+  stdio: 'inherit',
+  shell: true
+});
 
-const backend = startProcess('npm', ['run', 'dev'], 'backend');
+// Handle process exits
+backendProcess.on('close', (code) => {
+  console.log(`Backend process exited with code ${code}`);
+  frontendProcess.kill();
+});
 
-const frontend = startProcess('npm', ['start'], 'frontend');
+frontendProcess.on('close', (code) => {
+  console.log(`Frontend process exited with code ${code}`);
+  backendProcess.kill();
+});
 
+// Handle script termination
 process.on('SIGINT', () => {
-  backend.kill();
-  frontend.kill();
-  process.exit();
-}); 
+  console.log('Stopping all servers...');
+  backendProcess.kill();
+  frontendProcess.kill();
+});
+
+console.log('Development servers started. Press Ctrl+C to stop.'); 

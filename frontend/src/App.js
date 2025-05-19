@@ -21,7 +21,9 @@ import {
   Button,
   Grid,
   ToggleButtonGroup,
-  ToggleButton
+  ToggleButton,
+  Alert,
+  Chip
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -870,16 +872,21 @@ function App() {
   const [suggestions, setSuggestions] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentView, setCurrentView] = useState('search');
+  const [currentSearchTerm, setCurrentSearchTerm] = useState('');
+  const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
   const handleSearch = async (searchTerm) => {
     try {
+      setCurrentSearchTerm(searchTerm);
       const result = await searchWord(searchTerm);
       if (result.found) {
         setWordDetails(result.word);
         setSuggestions([]);
+        setShowNotFoundMessage(false);
       } else {
         setWordDetails(null);
         setSuggestions(result.suggestions);
+        setShowNotFoundMessage(searchTerm.length > 4);
       }
       return result;
     } catch (error) {
@@ -1006,10 +1013,32 @@ function App() {
                     searchMode={searchMode}
                     hideToggleButtons={true}
                   />
-                  <Suggestions 
-                    suggestions={suggestions}
-                    onSuggestionClick={handleSearch}
-                  />
+                  {showNotFoundMessage && (
+                    <Paper sx={{ mt: 2, p: 2 }}>
+                      <Alert severity="info">
+                        На жаль, слово "{currentSearchTerm}" не знайдено в словнику.
+                      </Alert>
+                    </Paper>
+                  )}
+                  {suggestions && suggestions.length > 0 && (
+                    <Paper sx={{ mt: 2, p: 2 }}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Можливо, ви мали на увазі:
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {suggestions.map((suggestion, index) => (
+                          <Chip
+                            key={index}
+                            label={suggestion}
+                            onClick={() => handleSearch(suggestion)}
+                            variant="outlined"
+                            clickable
+                            color="primary"
+                          />
+                        ))}
+                      </Box>
+                    </Paper>
+                  )}
                   {wordDetails ? (
                     <WordDetails word={wordDetails} />
                   ) : (

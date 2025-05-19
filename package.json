@@ -6,9 +6,13 @@
     "start": "node scripts/start.js",
     "start:backend": "cd backend && npm run dev",
     "start:frontend": "cd frontend && npm start",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:frontend": "cd frontend && npm run build",
+    "start:backend:prod": "cd backend && npm run start:prod",
+    "serve:frontend": "cd frontend && npx serve -s build",
+    "start_prod": "node scripts/start-prod.js"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "serve": "^14.2.1"
   }
 } 

@@ -8,7 +8,7 @@ import {
 
 const Suggestions = ({ suggestions, onSuggestionClick }) => {
   if (!suggestions || suggestions.length === 0) return null;
-
+  
   return (
     <Paper sx={{ mt: 2, p: 2 }}>
       <Typography variant="subtitle1" gutterBottom>

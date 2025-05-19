@@ -6,11 +6,7 @@ let db;
 function initializeDatabase() {
   const dbPath = path.join(__dirname, '../../morphology.db');
   db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-      console.error('Error connecting to database:', err);
-    } else {
-      console.log('Connected to database successfully');
-    }
+    if (err) console.error('Error connecting to database:', err);
   });
 }
 
@@ -63,7 +59,19 @@ function getPrefixInfo(prefixIds) {
     
     db.all(query, ids, (err, rows) => {
       if (err) reject(err);
-      else resolve(rows || []);
+      else {
+        const processedPrefixes = Promise.all(rows.map(async prefix => {
+          const explanation = prefix.explanation || '';
+          
+          if (explanation.includes('див.') || explanation.startsWith('див ')) {
+            return processReferencedPrefixes(prefix);
+          }
+          
+          return prefix;
+        }));
+        
+        processedPrefixes.then(resolve).catch(reject);
+      }
     });
   });
 }
@@ -72,13 +80,10 @@ function getRootInfo(rootInfo) {
   if (!rootInfo || rootInfo === '0') return Promise.resolve([]);
   
   return new Promise((resolve, reject) => {
-    // Split rootInfo by comma to handle multiple root IDs
     const rootIds = rootInfo.split(',');
     
-    // Process each root ID and collect promises
     const promises = rootIds.map(rootId => {
       if (rootId.includes('_')) {
-        // Handle main+secondary root format (e.g., "8_12")
         const [mainId, secondaryId] = rootId.split('_');
         const query = `
           SELECT m.*, s.identification_root as secondary_root, s.example as secondary_example
@@ -93,7 +98,6 @@ function getRootInfo(rootInfo) {
           });
         });
       } else {
-        // Handle simple root format
         const query = 'SELECT * FROM MainRoot WHERE id = ?';
         return new Promise((resolveRoot, rejectRoot) => {
           db.get(query, [rootId], (err, row) => {
@@ -104,10 +108,8 @@ function getRootInfo(rootInfo) {
       }
     });
     
-    // Wait for all root data to be fetched and flatten the results array
     Promise.all(promises)
       .then(results => {
-        // Flatten the array of arrays into a single array
         const flattenedResults = [].concat(...results);
         resolve(flattenedResults);
       })
@@ -128,9 +130,158 @@ function getSuffixInfo(suffixIds) {
     
     db.all(query, ids, (err, rows) => {
       if (err) reject(err);
-      else resolve(rows || []);
+      else {
+        const processedSuffixes = Promise.all(rows.map(async suffix => {
+          const explanation = suffix.explanation || '';
+          
+          if (explanation.includes('див.') || explanation.startsWith('див ')) {
+            return processReferencedSuffixes(suffix);
+          }
+          
+          return suffix;
+        }));
+        
+        processedSuffixes.then(resolve).catch(reject);
+      }
     });
   });
+}
+
+async function processReferencedSuffixes(suffix) {
+  const processedSuffix = { ...suffix, referencedSuffixes: [] };
+  const explanation = suffix.explanation || '';
+  let standardPattern = /див\.?\s+(?:\()?\/?([^\/]+)\/?\/?(?:\))?(?:\s+([IVX]+))?/g;
+  let match;
+  while ((match = standardPattern.exec(explanation)) !== null) {
+    const referencedSuffixId = "/" + match[1].trim().replaceAll(";", "") + "/";
+    
+    const romanNumeral = match[2] ? match[2].trim() : null;
+    const semanticInfo = romanNumeral ? romanToArabic(romanNumeral) : 0;
+
+    console.log(referencedSuffixId);
+    console.log(romanNumeral, semanticInfo);
+
+    try {
+      const referencedSuffix = await getReferencedSuffix(referencedSuffixId, semanticInfo);
+      if (referencedSuffix) processedSuffix.referencedSuffixes.push(referencedSuffix);
+    } catch (error) {
+      console.error(`Error fetching referenced suffix ${referencedSuffixId} with semantic_info ${semanticInfo}:`, error);
+    }
+  }
+  
+
+  const andPattern = /\/([^\/]+)\/\s+([IVX]+)\s+і\s+(?:\/([^\/]+)\/\s+)?([IVX]+)/g;
+  
+  while ((match = andPattern.exec(explanation)) !== null) {
+    const firstSuffixId = match[1].trim();
+    const firstRoman = match[2].trim();
+    const secondSuffixId = match[3] ? match[3].trim() : firstSuffixId; 
+    const secondRoman = match[4].trim();
+
+    try {
+      const semanticInfo = romanToArabic(firstRoman);
+      const referencedSuffix = await getReferencedSuffix(firstSuffixId, semanticInfo);
+      if (referencedSuffix && !referencedSuffixExists(processedSuffix.referencedSuffixes, referencedSuffix)) {
+        processedSuffix.referencedSuffixes.push(referencedSuffix);
+      }
+    } catch (error) {
+      console.error(`Error fetching referenced suffix ${firstSuffixId} with semantic_info ${romanToArabic(firstRoman)}:`, error);
+    }
+    
+    try {
+      const semanticInfo = romanToArabic(secondRoman);
+      const referencedSuffix = await getReferencedSuffix(secondSuffixId, semanticInfo);
+      if (referencedSuffix && !referencedSuffixExists(processedSuffix.referencedSuffixes, referencedSuffix)) {
+        processedSuffix.referencedSuffixes.push(referencedSuffix);
+      }
+    } catch (error) {
+      console.error(`Error fetching referenced suffix ${secondSuffixId} with semantic_info ${romanToArabic(secondRoman)}:`, error);
+    }
+  }
+  
+  return processedSuffix;
+}
+
+
+function referencedSuffixExists(suffixes, newSuffix) {
+  return suffixes.some(suffix => 
+    suffix.identification_suffix === newSuffix.identification_suffix && 
+    suffix.semantic_info === newSuffix.semantic_info
+  );
+}
+
+function getReferencedSuffix(suffixIdentifier, semanticInfo = 0) {
+  return new Promise((resolve, reject) => {
+    let query;
+    let params;
+    
+    // First try with the original suffixIdentifier
+    const trySearch = (suffixId) => {
+      if (semanticInfo > 0) {
+        query = `
+          SELECT * FROM Suffix 
+          WHERE identification_suffix = ? AND semantic_info = ?
+        `;
+        params = [suffixId, semanticInfo];
+      } else {
+        query = `
+          SELECT * FROM Suffix 
+          WHERE identification_suffix = ?
+        `;
+        params = [suffixId];
+      }
+      
+      db.get(query, params, (err, row) => {
+        if (err) {
+          reject(err);
+        } else if (row) {
+          resolve({...row, semantic_info: semanticInfo});
+        } else if (suffixId.endsWith('/')) {
+          // If not found and has trailing slash, try without it
+          trySearch(suffixId.slice(0, -1));
+        } else if (semanticInfo > 0) {
+          // If not found and has semantic info, try without semantic info
+          getReferencedSuffix(suffixIdentifier, 0)
+            .then(resolve)
+            .catch(reject);
+        } else {
+          resolve(null);
+        }
+      });
+    };
+
+    trySearch(suffixIdentifier);
+  });
+}
+
+function romanToArabic(roman) {
+  if (!roman) return 0;
+  
+  const romanValues = {
+    'I': 1,
+    'V': 5,
+    'X': 10,
+    'L': 50,
+    'C': 100,
+    'D': 500,
+    'M': 1000
+  };
+  
+  let result = 0;
+  
+  for (let i = 0; i < roman.length; i++) {
+    const current = romanValues[roman[i]];
+    const next = romanValues[roman[i + 1]];
+    
+    if (next && current < next) {
+      result += next - current;
+      i++;
+    } else {
+      result += current;
+    }
+  }
+  
+  return result;
 }
 
 function searchSimilarWords(word) {
@@ -183,7 +334,6 @@ function getWordsByLetter(letter, page = 0, limit = 100) {
             })
           );
           
-          // Get total count for pagination
           db.get(
             `SELECT COUNT(*) as total FROM Word WHERE sanitized_word LIKE ?`, 
             [`${letter}%`], 
@@ -242,13 +392,11 @@ function removeDuplicateComponents(components) {
   });
 }
 
-// Специальная функция для удаления дубликатов корней на основе их имени
 function removeDuplicateRootComponents(components) {
   const seen = new Set();
   const uniqueComponents = [];
 
   components.forEach(component => {
-    // Для корней используем identification_root или secondary_root
     const identifier = component.identification_root || component.secondary_root || "";
     
     if (!seen.has(identifier)) {
@@ -257,7 +405,6 @@ function removeDuplicateRootComponents(components) {
     }
   });
 
-  // Для корней не добавляем объяснения
   return uniqueComponents;
 }
 
@@ -287,8 +434,6 @@ function searchByComponent(type, id) {
         ];
         break;
       case 'root':
-        // For root search, use LIKE to narrow down the potential matches
-        // before more precise JavaScript filtering
         query = `
           SELECT w.*, p.part as part_of_speech_name 
           FROM Word w
@@ -298,16 +443,14 @@ function searchByComponent(type, id) {
           OR w.info_root LIKE ? 
           OR w.info_root LIKE ? 
           OR w.info_root LIKE ?
-          OR w.info_root LIKE ?
           ORDER BY w.sanitized_word
         `;
         params = [
-          exactId,                   // Exact match
-          `${exactId},%`,            // At beginning with comma
-          `%,${exactId},%`,          // In middle with commas
-          `%,${exactId}`,            // At end with comma
-          `${exactId}_%`,            // As main root ID
-          `%_${exactId}%`            // As secondary root ID
+          exactId,
+          `${exactId},%`,
+          `%,${exactId},%`,
+          `%,${exactId}`,
+          `${exactId}_%`
         ];
         break;
       case 'suffix':
@@ -341,22 +484,16 @@ function searchByComponent(type, id) {
       try {
         let filteredRows = rows;
         
-        // For root searches, we need to filter the results more precisely
         if (type === 'root') {
           filteredRows = rows.filter(row => {
             if (!row.info_root) return false;
-            
-            // Check each part of the info_root string for exact matches
             const parts = row.info_root.split(',');
             
             for (const part of parts) {
-              // Direct match
               if (part === exactId) return true;
-              
-              // Check for main/secondary root pattern (e.g., "8_12")
               if (part.includes('_')) {
                 const [mainId, secondaryId] = part.split('_');
-                if (mainId === exactId || secondaryId === exactId) {
+                if (mainId === exactId) {
                   return true;
                 }
               }
@@ -435,6 +572,100 @@ function getMorphologicalAlternation(wordId) {
     db.all(query, [wordId], (err, rows) => {
       if (err) reject(err);
       else resolve(rows || []);
+    });
+  });
+}
+
+async function processReferencedPrefixes(prefix) {
+  const processedPrefix = { ...prefix, referencedPrefixes: [] };
+  const explanation = prefix.explanation || '';
+  let standardPattern = /див\.?\s+(?:\()?([^\/]+)\/(?:\))?(?:\s+([IVX]+))?/g;
+  let match;
+  while ((match = standardPattern.exec(explanation)) !== null) {
+    const referencedPrefixId = match[1].trim().replaceAll(";", "") + "/";
+    
+    const romanNumeral = match[2] ? match[2].trim() : null;
+    const semanticInfo = romanNumeral ? romanToArabic(romanNumeral) : 0;
+
+    try {
+      const referencedPrefix = await getReferencedPrefix(referencedPrefixId, semanticInfo);
+      if (referencedPrefix) processedPrefix.referencedPrefixes.push(referencedPrefix);
+    } catch (error) {
+      console.error(`Error fetching referenced prefix ${referencedPrefixId} with semantic_info ${semanticInfo}:`, error);
+    }
+  }
+
+  const andPattern = /([^\/]+)\/\s+([IVX]+)\s+і\s+(?:([^\/]+)\/\s+)?([IVX]+)/g;
+  
+  while ((match = andPattern.exec(explanation)) !== null) {
+    const firstPrefixId = match[1].trim() + "/";
+    const firstRoman = match[2].trim();
+    const secondPrefixId = match[3] ? match[3].trim() + "/" : firstPrefixId; 
+    const secondRoman = match[4].trim();
+
+    try {
+      const semanticInfo = romanToArabic(firstRoman);
+      const referencedPrefix = await getReferencedPrefix(firstPrefixId, semanticInfo);
+      if (referencedPrefix && !referencedPrefixExists(processedPrefix.referencedPrefixes, referencedPrefix)) {
+        processedPrefix.referencedPrefixes.push(referencedPrefix);
+      }
+    } catch (error) {
+      console.error(`Error fetching referenced prefix ${firstPrefixId} with semantic_info ${romanToArabic(firstRoman)}:`, error);
+    }
+    
+    try {
+      const semanticInfo = romanToArabic(secondRoman);
+      const referencedPrefix = await getReferencedPrefix(secondPrefixId, semanticInfo);
+      if (referencedPrefix && !referencedPrefixExists(processedPrefix.referencedPrefixes, referencedPrefix)) {
+        processedPrefix.referencedPrefixes.push(referencedPrefix);
+      }
+    } catch (error) {
+      console.error(`Error fetching referenced prefix ${secondPrefixId} with semantic_info ${romanToArabic(secondRoman)}:`, error);
+    }
+  }
+  
+  return processedPrefix;
+}
+
+function referencedPrefixExists(prefixes, newPrefix) {
+  return prefixes.some(prefix => 
+    prefix.identification_prefix === newPrefix.identification_prefix && 
+    prefix.semantic_info === newPrefix.semantic_info
+  );
+}
+
+function getReferencedPrefix(prefixIdentifier, semanticInfo = 0) {
+  return new Promise((resolve, reject) => {
+    let query;
+    let params;
+    
+    if (semanticInfo > 0) {
+      query = `
+        SELECT * FROM Prefix 
+        WHERE identification_prefix = ? AND semantic_info = ?
+      `;
+      params = [prefixIdentifier, semanticInfo];
+    } else {
+      query = `
+        SELECT * FROM Prefix 
+        WHERE identification_prefix = ?
+      `;
+      params = [prefixIdentifier];
+    }
+    
+    db.get(query, params, (err, row) => {
+      if (err) {
+        reject(err);
+      } else if (row) {
+        resolve({...row, semantic_info: semanticInfo});
+      } else if (semanticInfo > 0) {
+        // If not found and has semantic info, try without semantic info
+        getReferencedPrefix(prefixIdentifier, 0)
+          .then(resolve)
+          .catch(reject);
+      } else {
+        resolve(null);
+      }
     });
   });
 }

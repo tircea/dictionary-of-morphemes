@@ -16,8 +16,10 @@ import { Close as CloseIcon } from '@mui/icons-material';
 const ExplanationModal = ({ open, onClose, component }) => {
   if (!component) return null;
 
-  // Определяем, является ли компонент корнем
   const isRoot = Boolean(component.identification_root || component.secondary_root);
+  
+  const hasSuffixReferences = !isRoot && component.referencedSuffixes && component.referencedSuffixes.length > 0;
+  const hasPrefixReferences = !isRoot && component.referencedPrefixes && component.referencedPrefixes.length > 0;
 
   return (
     <Modal
@@ -58,7 +60,6 @@ const ExplanationModal = ({ open, onClose, component }) => {
 
         <Box>
           {isRoot ? (
-            // Для корней показываем только пример
             component.example && (
               <>
                 <Typography variant="h6" gutterBottom>
@@ -90,7 +91,6 @@ const ExplanationModal = ({ open, onClose, component }) => {
               </>
             )
           ) : (
-            // Для префиксов и суффиксов показываем объяснение
             component.explanation && (
               <>
                 <Typography variant="h6" gutterBottom>
@@ -104,6 +104,130 @@ const ExplanationModal = ({ open, onClose, component }) => {
                 >
                   <Typography>{component.explanation}</Typography>
                 </Paper>
+                
+                {/* Отображение связанных суффиксов */}
+                {hasSuffixReferences && (
+                  <Box sx={{ mt: 3 }}>
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '&::before': {
+                          content: '""',
+                          width: 3,
+                          height: 20,
+                          backgroundColor: 'primary.main',
+                          marginRight: 1.5,
+                          borderRadius: 1
+                        }
+                      }}
+                    >
+                      Пов'язані суфікси:
+                    </Typography>
+                    {component.referencedSuffixes.map((refSuffix, index) => (
+                      <Paper 
+                        key={index}
+                        sx={{ 
+                          p: 2,
+                          backgroundColor: 'grey.50',
+                          mb: 2,
+                          border: '1px solid',
+                          borderColor: 'primary.light',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            boxShadow: 2,
+                            borderColor: 'primary.main',
+                          }
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Chip 
+                            label={refSuffix.identification_suffix}
+                            color="primary"
+                            sx={{ fontWeight: 'bold', mr: 1 }}
+                          />
+                          {refSuffix.semantic_info > 0 && (
+                            <Chip 
+                              label={`Семантична інформація: ${refSuffix.semantic_info}`}
+                              variant="outlined"
+                              size="small"
+                            />
+                          )}
+                        </Box>
+                        {refSuffix.explanation && (
+                          <Typography variant="body2" sx={{ mt: 1 }}>
+                            {refSuffix.explanation}
+                          </Typography>
+                        )}
+                      </Paper>
+                    ))}
+                  </Box>
+                )}
+                
+                {/* Отображение связанных префиксов */}
+                {hasPrefixReferences && (
+                  <Box sx={{ mt: 3 }}>
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '&::before': {
+                          content: '""',
+                          width: 3,
+                          height: 20,
+                          backgroundColor: 'primary.main',
+                          marginRight: 1.5,
+                          borderRadius: 1
+                        }
+                      }}
+                    >
+                      Пов'язані префікси:
+                    </Typography>
+                    {component.referencedPrefixes.map((refPrefix, index) => (
+                      <Paper 
+                        key={index}
+                        sx={{ 
+                          p: 2,
+                          backgroundColor: 'grey.50',
+                          mb: 2,
+                          border: '1px solid',
+                          borderColor: 'primary.light',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            boxShadow: 2,
+                            borderColor: 'primary.main',
+                          }
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Chip 
+                            label={refPrefix.identification_prefix}
+                            color="primary"
+                            sx={{ fontWeight: 'bold', mr: 1 }}
+                          />
+                          {refPrefix.semantic_info > 0 && (
+                            <Chip 
+                              label={`Семантична інформація: ${refPrefix.semantic_info}`}
+                              variant="outlined"
+                              size="small"
+                            />
+                          )}
+                        </Box>
+                        {refPrefix.explanation && (
+                          <Typography variant="body2" sx={{ mt: 1 }}>
+                            {refPrefix.explanation}
+                          </Typography>
+                        )}
+                      </Paper>
+                    ))}
+                  </Box>
+                )}
               </>
             )
           )}
@@ -208,7 +332,6 @@ const WordDetails = ({ word }) => {
     );
   };
 
-  // Функция для рендера морфологических альтернаций
   const renderMorphologicalAlternation = (morphologicalAlternation) => {
     if (!morphologicalAlternation || morphologicalAlternation.length === 0) return null;
 
