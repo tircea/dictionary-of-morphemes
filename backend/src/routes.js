@@ -4,7 +4,8 @@ const {
   searchByComponent, 
   getAllComponents,
   getWordsByLetter,
-  sanitizeWord
+  sanitizeWord,
+  getTopComponents
 } = require('./database');
 
 function setupRoutes(app) {
@@ -59,6 +60,15 @@ function setupRoutes(app) {
       const { type } = req.params;
       const components = await getAllComponents(type);
       res.json({ components });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/top-components', async (req, res) => {
+    try {
+      const topComponents = await getTopComponents();
+      res.json(topComponents);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

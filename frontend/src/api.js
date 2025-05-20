@@ -42,4 +42,14 @@ export const getAllComponents = async (type) => {
     console.error('Error getting components:', error);
     throw error;
   }
+};
+
+export const getTopComponents = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/top-components`);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting top components:', error);
+    throw error;
+  }
 }; 

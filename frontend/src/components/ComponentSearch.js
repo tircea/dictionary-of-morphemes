@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import {
   Box,
   FormControl,
@@ -17,7 +17,8 @@ import {
 } from '@mui/material';
 import { getAllComponents, searchByComponent } from '../api';
 
-const ComponentSearch = ({ onWordSelect }) => {
+// Convert to use forwardRef to access methods from parent component
+const ComponentSearch = forwardRef(({ onWordSelect }, ref) => {
   const [componentType, setComponentType] = useState('prefix');
   const [components, setComponents] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState('');
@@ -58,6 +59,39 @@ const ComponentSearch = ({ onWordSelect }) => {
     }
   };
 
+  // Expose methods to parent components through ref
+  useImperativeHandle(ref, () => ({
+    selectComponent: (type, id) => {
+      // Set the component type first
+      setComponentType(type);
+      
+      // Instead of relying on the state update, use the passed type directly
+      const loadAndSelectComponent = async () => {
+        try {
+          setLoading(true);
+          
+          // First load components for this type
+          const result = await getAllComponents(type);
+          setComponents(result?.components || []);
+          
+          // Then select the specific component
+          setSelectedComponent(id);
+          
+          // Finally, search with the component
+          const searchResult = await searchByComponent(type, id);
+          setWords(searchResult?.words || []);
+          window.scrollTo(0, 0);
+        } catch (error) {
+          console.error('Error in loadAndSelectComponent:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      // Start the loading process
+      loadAndSelectComponent();
+    }
+  }));
 
   const getMorphologicalPreview = (word) => {
     if (!word.morphologicalAlternation || word.morphologicalAlternation.length === 0) {
@@ -169,6 +203,6 @@ const ComponentSearch = ({ onWordSelect }) => {
       </Grid>
     </Box>
   );
-};
+});
 
 export default ComponentSearch; 

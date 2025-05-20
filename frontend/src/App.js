@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Container, 
   Box, 
@@ -37,6 +37,7 @@ import WordDetails from './components/WordDetails';
 import ComponentSearch from './components/ComponentSearch';
 import Suggestions from './components/Suggestions';
 import AlphabetWordList from './components/AlphabetWordList';
+import TopComponents from './components/TopComponents';
 import { searchWord } from './api';
 
 const theme = createTheme({
@@ -874,6 +875,7 @@ function App() {
   const [currentView, setCurrentView] = useState('search');
   const [currentSearchTerm, setCurrentSearchTerm] = useState('');
   const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
+  const componentSearchRef = useRef(null);
 
   const handleSearch = async (searchTerm) => {
     try {
@@ -898,6 +900,16 @@ function App() {
     setWordDetails(word);
     setSuggestions([]);
     setSearchMode('word');
+  };
+
+  const handleComponentSelect = (type, id) => {
+    setSearchMode('component');
+    // We need to wait for the component search tab to be active before selecting the component
+    setTimeout(() => {
+      if (componentSearchRef.current && typeof componentSearchRef.current.selectComponent === 'function') {
+        componentSearchRef.current.selectComponent(type, id);
+      }
+    }, 100);
   };
 
   const handleDrawerToggle = () => {
@@ -1021,32 +1033,26 @@ function App() {
                     </Paper>
                   )}
                   {suggestions && suggestions.length > 0 && (
-                    <Paper sx={{ mt: 2, p: 2 }}>
-                      <Typography variant="subtitle1" gutterBottom>
-                        Можливо, ви мали на увазі:
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                        {suggestions.map((suggestion, index) => (
-                          <Chip
-                            key={index}
-                            label={suggestion}
-                            onClick={() => handleSearch(suggestion)}
-                            variant="outlined"
-                            clickable
-                            color="primary"
-                          />
-                        ))}
-                      </Box>
-                    </Paper>
+                    <Suggestions 
+                      suggestions={suggestions} 
+                      onSuggestionClick={handleSearch}
+                    />
                   )}
                   {wordDetails ? (
                     <WordDetails word={wordDetails} />
                   ) : (
-                    <AlphabetWordList onWordSelect={handleWordSelect} />
+                    <>
+                      {/* Add TopComponents here */}
+                      <TopComponents onComponentSelect={handleComponentSelect} />
+                      <AlphabetWordList onWordSelect={handleWordSelect} />
+                    </>
                   )}
                 </>
               ) : (
-                <ComponentSearch onWordSelect={handleWordSelect} />
+                              <ComponentSearch 
+                onWordSelect={handleWordSelect} 
+                ref={componentSearchRef}
+              />
               )}
             </Container>
           ) : (

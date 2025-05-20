@@ -670,6 +670,144 @@ function getReferencedPrefix(prefixIdentifier, semanticInfo = 0) {
   });
 }
 
+function getTopComponents() {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT info_prefix, info_root, info_suffix FROM Word', [], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      const prefixCounts = {};
+      const rootCounts = {};
+      const suffixCounts = {};
+
+      // Count occurrences of each component
+      rows.forEach(row => {
+        // Process prefixes
+        if (row.info_prefix && row.info_prefix !== '0') {
+          const prefixes = row.info_prefix.split(',');
+          prefixes.forEach(prefix => {
+            prefixCounts[prefix] = (prefixCounts[prefix] || 0) + 1;
+          });
+        }
+
+        // Process roots
+        if (row.info_root && row.info_root !== '0') {
+          const roots = row.info_root.split(',');
+          roots.forEach(root => {
+            // Handle primary root (in case of format like "1_123")
+            if (root.includes('_')) {
+              const primaryRoot = root.split('_')[0];
+              rootCounts[primaryRoot] = (rootCounts[primaryRoot] || 0) + 1;
+            } else {
+              rootCounts[root] = (rootCounts[root] || 0) + 1;
+            }
+          });
+        }
+
+        // Process suffixes
+        if (row.info_suffix && row.info_suffix !== '0') {
+          const suffixes = row.info_suffix.split(',');
+          suffixes.forEach(suffix => {
+            suffixCounts[suffix] = (suffixCounts[suffix] || 0) + 1;
+          });
+        }
+      });
+
+      // Sort and get top components
+      const getTopItems = (countMap, limit = 30) => {
+        return Object.entries(countMap)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, limit)
+          .map(([id, count]) => ({ id, count }));
+      };
+
+      const topPrefixes = getTopItems(prefixCounts);
+      const topRoots = getTopItems(rootCounts);
+      const topSuffixes = getTopItems(suffixCounts);
+
+      // Get component details
+      Promise.all([
+        getComponentDetails(topPrefixes, 'prefix'),
+        getComponentDetails(topRoots, 'root'),
+        getComponentDetails(topSuffixes, 'suffix')
+      ]).then(([prefixes, roots, suffixes]) => {
+        // Remove duplicates based on identification fields
+        const uniquePrefixes = removeDuplicatesByIdentification(prefixes, 'identification_prefix');
+        const uniqueRoots = removeDuplicatesByIdentification(roots, 'identification_root');
+        const uniqueSuffixes = removeDuplicatesByIdentification(suffixes, 'identification_suffix');
+        
+        resolve({
+          prefixes: uniquePrefixes,
+          roots: uniqueRoots,
+          suffixes: uniqueSuffixes
+        });
+      }).catch(reject);
+    });
+  });
+}
+
+function removeDuplicatesByIdentification(components, idField) {
+  const seen = new Map();
+  const result = components.filter(component => {
+    const identifier = component[idField];
+    if (!identifier || seen.has(identifier)) return false;
+    seen.set(identifier, true);
+    return true;
+  });
+  
+  return result;
+}
+
+function getComponentDetails(components, type) {
+  if (!components || components.length === 0) return Promise.resolve([]);
+  
+  return new Promise((resolve, reject) => {
+    const ids = components.map(c => c.id);
+    
+    const placeholders = ids.map(() => '?').join(',');
+    let table, idField;
+    
+    switch (type) {
+      case 'prefix':
+        table = 'Prefix';
+        idField = 'id';
+        break;
+      case 'root':
+        table = 'MainRoot';
+        idField = 'id';
+        break;
+      case 'suffix':
+        table = 'Suffix';
+        idField = 'id';
+        break;
+      default:
+        return reject(new Error('Invalid component type'));
+    }
+    
+    const query = `SELECT * FROM ${table} WHERE ${idField} IN (${placeholders})`;
+    
+    db.all(query, ids, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      // Merge component details with count
+      const result = components.map(component => {
+        const details = rows.find(row => row.id.toString() === component.id);
+        return {
+          ...details,
+          count: component.count
+        };
+      }).filter(item => item.id); // Filter out undefined items
+      
+      resolve(result);
+    });
+  });
+}
+
 module.exports = {
   initializeDatabase,
   searchWord,
@@ -677,5 +815,6 @@ module.exports = {
   searchByComponent,
   getAllComponents,
   getWordsByLetter,
-  sanitizeWord
+  sanitizeWord,
+  getTopComponents
 }; 
