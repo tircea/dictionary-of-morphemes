@@ -121,6 +121,11 @@ const DictionaryInfo = () => {
         <Tab label="Вторинні морфеми" />
         <Tab label="Критерії поділу" />
         <Tab label="Як користуватися словником" />
+        <Tab label="Чергування голосних" />
+        <Tab label="Чергування приголосних" />
+        <Tab label="Нерегулярні слова" />
+        <Tab label="Термінологія" />
+        <Tab label="Література" />
       </Tabs>
 
       <TabPanel value={tabValue} index={0}>
@@ -843,6 +848,557 @@ const DictionaryInfo = () => {
         </Typography>
       </TabPanel>
 
+      <TabPanel value={tabValue} index={6}>
+        <Typography variant="h2">Чергування голосних</Typography>
+        <Typography paragraph>
+          Чергування голосних в українській мові є важливим морфонологічним явищем, що впливає на форми слів і словотворення.
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[а] — [о]</Typography>
+        <Typography paragraph>
+          У коренях дієслів: ламати — ломити
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[а] — [і]</Typography>
+        <Typography paragraph>
+          У коренях дієслів: лазити — лізти
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[е] — [ф]</Typography>
+        <Typography paragraph>
+          У коренях дієслів, іменників, суфіксах іменників ([е] вважається випадним): 
+          беру — брати, пень — пнем, хлóпець — хлопця
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[е] — [0] — [и]</Typography>
+        <Typography paragraph>
+          У коренях дієслів при утворенні І особи однини і недоконаної форми дієслова: 
+          тéрти — тру — витирати
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[е] — [і]</Typography>
+        <Typography paragraph>
+          В коренях дієслів при утворенні видових форм: тектй — витікати, местй — замітати.
+          У відкритих і закритих складах усіх частин мови: осінь — осені, сім — семи, весéлий — весільний
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[0] — [є]</Typography>
+        <Typography paragraph>
+          У коренях дієслів: бродити — брести.
+          У коренях слів після шиплячих і [й] перед твердим складом з голосними [а], [и], [о], [у]: 
+          чотири — четвертий, шостий — шести
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[и] — [і]</Typography>
+        <Typography paragraph>
+          У коренях слів: пити — напій
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[и] — [ов]</Typography>
+        <Typography paragraph>
+          У коренях слів: ри́ти — рови
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[о] — [01]</Typography>
+        <Typography paragraph>
+          У коренях іменників ([о] вважають випадним): сон — сну.
+          У суфіксах іменників: син/óк — син/к/á
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[о] — [и] — [у]</Typography>
+        <Typography paragraph>
+          У коренях дієслів і похідних: сохнути — висихати — сухий
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[о] — [и]</Typography>
+        <Typography paragraph>
+          У коренях слів: дрож — дрижати
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[0] — [і]</Typography>
+        <Typography paragraph>
+          У відкритих і закритих складах слів усіх частин мови: вози — віз, ходити — хід, 
+          вона — він, вільний — воля, сьомий — сім, бадьóр/ість (-р/ост/і)
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[у] — [ов] — [ув]</Typography>
+        <Typography paragraph>
+          У коренях дієслів і похідних: кýю — кований — вй-кувати
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[У] — [в]</Typography>
+        <Typography paragraph>
+          На початку слів перед приголосними, коли [у] ненаголошене: уживати — вживати, уподобаний — вподобаний
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[і] — [й]</Typography>
+        <Typography paragraph>
+          На початку слів перед приголосними, коли [і] ненаголошене: інакший — йнáкший, іти — йти
+        </Typography>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={7}>
+        <Typography variant="h2">Чергування приголосних</Typography>
+        <Typography paragraph>
+          Чергування приголосних відіграє важливу роль у морфології української мови, особливо у словозміні та словотворенні.
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[б] — [бл]</Typography>
+        <Typography paragraph>
+          У формах дієслів і похідних: любити — люблю — люблений
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[в] — [вл]</Typography>
+        <Typography paragraph>
+          У формах дієслів і похідних: ловити — ловлю — лóвля
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[г] — [ж]</Typography>
+        <Typography paragraph>
+          У коренях іменників, прикметників, дієслів: друг — друже — дружній, гонити — жену, крига — крижина
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[г] — [з]</Typography>
+        <Typography paragraph>
+          У коренях іменників при відмінюванні: нога (н.в.) — нозі (д.в.) — на нозі (м.в).
+          У суфіксах іменників: коз/арл/іЬ/га — коз/ар-л/ю́з/і. пару б' /я'е/а — пару б'/я́з/і
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[г] — [з] — [ж]</Typography>
+        <Typography paragraph>
+          Чергування у коренях слів: книга — книзі — кни́ж-ний
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[д] — [дж]</Typography>
+        <Typography paragraph>
+          У формах дієслів: водити — воджу
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[з] — [*и]</Typography>
+        <Typography paragraph>
+          У формах дієслів: возити — вожу
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[зд] — [ждж]</Typography>
+        <Typography paragraph>
+          У формах дієслів: виїздити — виїжджати
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[И] — [ц]</Typography>
+        <Typography paragraph>
+          У коренях іменників при відмінюванні: рука (н.в.) — руці (д.в.) — на руці (м.в.).
+          У суфіксах іменників: багн/йк/а — багн/їдцЦ, шахт/áр/к/а — шахт/áр/ц/І
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[к] — [ч]</Typography>
+        <Typography paragraph>
+          У коренях іменників, прикметників, дієслів: вовк— вовчисько — вовчий, наука — учйти
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[к] — [ц] — [ч]</Typography>
+        <Typography paragraph>
+          Чергування у коренях слів: лук — лучнйй — на луці, ломака — ломаці — ломаччя
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[м] — [мл]</Typography>
+        <Typography paragraph>
+          У формах дієслів і похідних: ломити —ломлю́ — лóмлений
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[п] — [пл]</Typography>
+        <Typography paragraph>
+          У формах дієслів і похідних: купити — куплю — куплений
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[с] — [ш]</Typography>
+        <Typography paragraph>
+          У формах дієслів і похідних: місити — мішу — мішаний
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[ск] — [щ]</Typography>
+        <Typography paragraph>
+          У формах дієслів, іменників, прикметників: блиск — блискýчий — блищати, ліскóвий — ліщина
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[ст] — [щ]</Typography>
+        <Typography paragraph>
+          У формах іменників, прикметників, дієслів: ростити — вирощувати, густий — гуща
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[т] — [ч]</Typography>
+        <Typography paragraph>
+          У формах іменників, прикметників, дієслів: крутити — кручений, вертіти — верчу, крутий — крýча
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[х] — [с]</Typography>
+        <Typography paragraph>
+          У коренях іменників при відмінюванні: муха (н.в.) — мусі (д.в.) — на мусі (м.в.)
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[х] — [ш]</Typography>
+        <Typography paragraph>
+          У формах іменників, прикметників, дієслів: рух — рушити — непорушний, страхати — страшити
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>[ф] — [фл]</Typography>
+        <Typography paragraph>
+          У формах дієслів: графити — графлід — розграфлювати
+        </Typography>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={8}>
+        <Typography variant="h2">Слова, утворені нерегулярним способом</Typography>
+        <Typography paragraph>
+          Нерегулярне словотворення характеризується відхиленням від загальних словотвірних моделей та правил.
+          Такі слова потребують особливої уваги при морфемному аналізі.
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Особливості нерегулярних утворень</Typography>
+        <Typography paragraph>
+          Нерегулярні способи словотворення включають:
+        </Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Усічення кореневих морфем</li>
+          <li>Накладання морфем</li>
+          <li>Нульова суфіксація</li>
+          <li>Чергування, що не підпорядковується загальним правилам</li>
+          <li>Перерозклад морфемної структури</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Приклади нерегулярних утворень</Typography>
+        <Typography paragraph>
+          <strong>Усічення основ:</strong> кори́ст/увá/ти/ся — кори́ст/увá/ч (-ува↔ач); 
+          по/зив/á/ти — по/зив/á/ч (-а↔ач); руб/á/ти — руб/á/ч (-а↔ач)
+        </Typography>
+        
+        <Typography paragraph>
+          <strong>Накладання морфем:</strong> роз/ли/вá/ти — роз/ли/вá/ч (-ва↔ач); 
+          пис/á/ти — пи́с/а/р (-а↔ар)
+        </Typography>
+        
+        <Typography paragraph>
+          <strong>Взаємодія на стику морфем:</strong> чуваський (пор. чувáш↔ськ), 
+          черкаський (пор. Черкáс(и)↔ськ), стéльмаський (пор. стельмах—ськ)
+        </Typography>
+        
+        <Typography paragraph>
+          <strong>Слова з нульовими суфіксами:</strong> пласк/и́й, плоск/ий, 
+          без/мóзк/ий, без/мізк/ий (пор. мóзок, мóзк/у)
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Спрощення в групах приголосних</Typography>
+        <Typography paragraph>
+          Усічені варіанти морфем утворюються при спрощенні в групах приголосних:
+        </Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>жди — жн: тиждень — тижн/éв/ий</li>
+          <li>здн — зн: ви́їзд — ви/їз/н/и́й</li>
+          <li>стн — сн: якість — я́кіс/н/ий</li>
+          <li>стл — сл: щáстя — щас/ли́в/ий</li>
+          <li>слн або стн — сн: мáсл/о або маст/и́/ти — мас/н/и́й</li>
+          <li>рдц — рц: сердéч/н/ий — сéрце</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Вищий ступінь прикметників</Typography>
+        <Typography paragraph>
+          Нові варіанти кореневих морфем виникають при творенні вищого ступеня прикметників, 
+          корені яких закінчуються на приголосний [г], [з], [с]. За законом асиміляції (уподібнення) 
+          змінюється кінцевий приголосний кореня деяких прикметників: [г], [з] на [ж], а [с] на [ш] 
+          і суфікс вищого ступеня [ш] — на [ч]: доро/г/и́й — дорож/ч/ий, вузь/к/и́й — вýж/ч/ий, 
+          низь/к/и́й — ни́ж/ч/ий, вис/óк/ий — вищий (виш+ч). Суфікс -ок- при творенні вищого ступеня випадає.
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Дієслівні форми</Typography>
+        <Typography paragraph>
+          Нові варіанти кореневих морфем виникають у дієслівних дієприкметникових формах, 
+          корені яких закінчуються на [б], [г], [д], [к], [п], [т]. Перед суфіксами -я-, ну-, -л- ці звуки випадають:
+          блистíти — бли́с/ну/ти, із блист+ну; загибати — з/ги́/ну/ти, із гиб+ну; 
+          кидати — ви́/ки/ну/ти, із кид+ну; утопити — в/то/нý/ти, із топ+ну.
+        </Typography>
+        
+        <Typography paragraph>
+          Разом з тим в українській мові є випадки, коли таке випадання не відбувається: смик/нý/ти, миг/нý/ти.
+        </Typography>
+        
+        <Typography paragraph>
+          Варіантами до кореневих морфем є і ті, які виникають внаслідок усічення кореневого звука 
+          при утворенні дієслівних форм минулого часу доконаного виду:
+          пáд/а/ти — у/пá/в, сід/á/ти — сі/в; вес/ти́ — ві/в, ве/л/á.
+        </Typography>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={9}>
+        <Typography variant="h2">Короткий словничок термінів</Typography>
+        <Typography paragraph>
+          Основні терміни морфемної структури та словотвору української мови.
+        </Typography>
+        
+        <Box sx={{ '& > div': { mb: 2 } }}>
+          <Typography component="div" variant="body1">
+            <strong>Абревіатура</strong> — похідне слово, утворене з усічених основ, початкових букв, складів, іноді частин слів якогось словосполучення.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Адвербіалізація</strong> — перехід слів різних частин мови (переважно іменників і прикметників) у прислівники.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Ад'єктивація</strong> — перехід слів якоїсь частини мови (переважно дієприкметників) у прикметники.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Аналіз слова морфемний (морфематичний, морфологічний)</strong> — лінгвістичний аналіз слова з метою визначення його складу, структури.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Антоніми морфем</strong> — властивість різних морфем передавати протилежні значення.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Афікс</strong> — частина слова, що змінює його значення або форму, визначає його роль у реченні.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Багатозначність (полісемія) морфеми</strong> — наявність у морфемі кількох значень.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Будова слова (морфемна будова слова, морфемна структура слова)</strong> — наявність взаємозв'язаних морфем, з яких складається слово.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Варіант морфеми</strong> — одна з видозмін певної морфеми, що виникає при словозміні або словотворенні.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Варіант кореневої морфеми</strong> — одна із видозмін кореня, що виникла внаслідок чергування.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Варіант префіксальної морфеми</strong> — одна із видозмін префікса, що виникає часто для милозвучності.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Варіант суфіксальної морфеми</strong> — одна із видозмін суфікса, що найчастіше виникає при чергуванні або внаслідок історичного розвитку морфем.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Варіант основи</strong> — фонетична видозміна основи слова.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Вербалізація</strong> — перехід інших частин мови у дієслова.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Взаємодія морфем</strong> — процес, що відбувається між сусідніми морфемами і сприяє змінам морфонологічного характеру, зменшенню морфем, їх частин.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Дериват</strong> — похідне слово.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Дериватологія</strong> — словотвір.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Деривація</strong> — словотворення.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Засоби словотворення, деривації</strong> — конкретний елемент похідного слова, за допомогою якого воно твориться.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Закінчення</strong> — службова морфема, що є в кінці слова.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Звуки сполучні (голосні)</strong> — окремий голосний звук (найчастіше о, е), що з'єднує основи складних слів.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Значення (семантика) морфеми</strong> — значення словотвірних елементів, які не існують поза словом і надають йому додаткових відтінків.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Інтерфікс</strong> — структурна частина слова, яка не має значення, виражається одним або кількома звуками, перебуває між морфемами і використовується для їх з'єднання.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Композит</strong> — складне слово.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Корінь вторинний</strong> — вторинна коренева морфема, що виникла внаслідок злиття на певному етапі розвитку мови етимологічних морфем.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Корінь етимологічний</strong> — коренева морфема, яка виділяється тільки внаслідок етимологічного аналізу.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Корінь слова</strong> — основна морфема слова, без якої воно не існує і яка повторюється у всіх споріднених словах.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Лексема</strong> — слово, структурний елемент мови.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Морф (морфа)</strong> — конкретний виразник морфеми, варіант морфеми.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Морфема</strong> — значеннєва частина слова (корінь, префікс, суфікс, закінчення).
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Морфема афіксальна</strong> — усі морфеми, крім кореня.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Морфонологія</strong> — розділ науки, що вивчає зв'язок морфологи та фонетики, звукову будову морфем.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Накладання морфем</strong> — злиття, в одному звуку сусідніх морфем слова.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Омонімія морфем</strong> — однозвучність різних за значенням морфем.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Основа слова</strong> — слово без словозмінних морфем.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Перерозклад основи слова</strong> — мовний процес, при якому відбувається переміщення границі між основою і афіксом у новоутвореному слові.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Продуктивність морфеми</strong> — здатність морфеми брати участь у творенні великої кількості нових слів.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Словотвір</strong> — мовний процес, під час якого за допомогою мовних ресурсів утворюються нові слова.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Субстантивація</strong> — перехід слів з інших частин мови (передусім прикметників та дієприкметників) у іменники.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Суфікс непродуктивний</strong> — суфікс, який не бере участі при творенні нових похідних слів.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Суфікс продуктивний</strong> — суфікс, що активно використовується при творенні нових похідних слів.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Усічення морфеми, основи, слова</strong> — утворення слова із скороченою морфемою.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Флексія</strong> — закінчення.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Чергування звуків</strong> — зміна звуків при словозміні або словотворенні, що відбувається на основі закономірностей української мови.
+          </Typography>
+          
+          <Typography component="div" variant="body1">
+            <strong>Членування морфем у слові</strong> — ділення слова на морфеми.
+          </Typography>
+        </Box>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={10}>
+        <Typography variant="h2">Список літератури</Typography>
+        <Typography paragraph>
+          Основні джерела та публікації, що використовувалися при підготовці словника.
+        </Typography>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Монографії та підручники</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>ВакарюкЛ., ПанцьоС. Українська мова/ Морфеміка І словотвір. —Тернопіль: Лілея, 1999. —218 с.</li>
+          <li>Возний Т.І. Структура дієслів в українській мові у порівнянні з російською та білоруською. — Львів: Вища школа, 1981. —185 с.</li>
+          <li>Горпинич В.О. Будова слова І словотвір. — К.: Рад. школа, 1977. —119 с.</li>
+          <li>Грищенко А.П. Прикметники в українській мові. — К.: Наук, думка, 1978. —208 с.</li>
+          <li>Жовтобрюх М.А., Кулик Б.М. Курс сучасної української літературної мови. 2-ге вид. —К.: Рад. школа, 1961. —У 2 ч. Ч. 1. — 407 с.</li>
+          <li>Ільїн В.С. Префікси в сучасній українській мові. —К.: Вид-во АН УРСР, 1953. —166 с.</li>
+          <li>Карпіловська Є. А. Суфіксальна підсистема сучасної української літературної мови: Будова та реалізація. —К., 1999. —288 с.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Спеціальні дослідження</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Клименко Н.Ф. Словотворча структура і семантика складних слів у сучасній українській мові. —К.: Наук, думка, 1984. —252 с.</li>
+          <li>Клименко Н.Ф., Карпіловська Є.А. Словотвірна морфеміка сучасної української літературної мови. —К.: 1998, —162 с.</li>
+          <li>Коваликї.І. Вчення про словотвір. —Львів: Вид-во Львів, ун-ту, 1961. Вип, 2. —83 с.</li>
+          <li>Мовознавство і школа. —К.: Наук, думка, 1981. —220 с.</li>
+          <li>Морфемна структура слова. —К.: Наук.думка, 1979. —335 с.</li>
+          <li>Морфологічна будова сучасної української мови. —К.: Наук .думка, 1975. —208 с.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Мовознавчі праці</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Развитие современяого русского литературного язьїка: Словообразование. Членимость слов. —М.: Наука, 1975. —264 с.</li>
+          <li>Русанівський В.М. Структура українського дієслова. —К.: Наук, думка, 1971. —315 с.</li>
+          <li>Словотвір сучасної української літературної мови. —К.: Наук, думка, 1979. —406 с.</li>
+          <li>Сучасна українська мова. —К.: Наук, думка, 1969. Вступ. Фонетика. —436 с. Морфологія. —583 с.</li>
+          <li>Ющук І.П. Рідна мова. —К.: Освіта, 1996. —286 с.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Словники та довідкові видання</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Гринчишин Д.Г., Сербенська О.А. Словник паронімів української мови. —К.: Рад. школа, 1986. —220 с.</li>
+          <li>Деркач П.М. Короткий словник синонімів української мови / Відп. за випуск і передм. Л.Полюга. —Львів-Краків-Париж: Просвіта, 1993. —208 с.</li>
+          <li>Етимологічний словник української мови. —К.: Наук, думка, 1982-1989. Т. 1-3.</li>
+          <li>Єрмоленко С.Я., Єрмоленко В.І., Ленець К.В., Пустовіт Л.О. Новий російсько-український словник-довідник. —К.: Довіра, 1996. —798 с.</li>
+          <li>Інверсійний словник української мови. —К.: Наук, думка, 1985. — 811 с.</li>
+          <li>Караванський С. Практичний словник синонімів української мови. —К.: Кобза, 1993. —471 с.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Спеціалізовані словники</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Клименко Н.Ф., Карпіловська Є.А., Карпіловський В.С., Недозим Т.І. Словник афіксальних морфем української мови. —К., 1998. —434 с.</li>
+          <li>Морфемний словник. Укладач Л.М.Полюга. —К.: Рад. школа, 1983. —463 с.</li>
+          <li>Орфографічний словник української мови. —К.: Довіра, 1994. — 864 с.</li>
+          <li>Полюга Л.М. Словник антонімів. —К.: Рад. школа, 1987., 2-ге вид. —К.: Довіра, 1999.</li>
+          <li>Пустовіт Л.О. Скопненко О.І., Сюта Г.М., Цимбалюк Т.В. Словник іншомовних слів. —К.: Довіра, 2000. —1018 с.</li>
+          <li>Сікорська З.С. Українсько-російський словотворчий словник. — К.: Рад.школа, 1985. —183 с.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Загальні словники</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Словарь словообразовательньїх злементов немецкого язьїка /Под руководством М.Д.Степановой. —М.: Рус. язьік, 1979. —536 с.</li>
+          <li>Словник іншомовних слів /За ред. чл.-кор. АН УРСР О.М. Мельничука. —К.: Головна редакція УРЕ, 1974. —775 с.</li>
+          <li>Словник іншомовних слів. Укладачі: С.М. Морозов, Л.М. Шкарпута. —К.: Наук.думка, 2000. —664 с.</li>
+          <li>Словник труднощів української мови /За ред. Я.С. Єрмоленко. —К.: Рад. школа, 1989.—334 с.</li>
+          <li>Словник української мови. Томи І—XI. —К.: Наук, думка, 1971-1981.</li>
+          <li>Словник української мови XVI — першої половини XVII ст. —Львів, 1994-1997. Вип. 1-4.</li>
+          <li>Словник староукраїнської мови XIV—XV ст. —К.: Наук, думка, 1977 -1978. Укладачі: Д.Гринчишин, У.Єдлінська, Л. Карпова, Л.Полюга та ін. Т. 1-2.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Довідкові та навчальні видання</Typography>
+        <Box component="ul" sx={{ mb: 3 }}>
+          <li>Українська літературна вимова і наголос. —К.: Наук.думка, 1973. -724 с.</li>
+          <li>Яценко І.Т. Морфемний аналіз. Словник-довідник. /За ред. Н.Ф. Клименко. —К.: Вища школа. Т. 1. (А - Н), 1980. —356 с.; т. II (О -Я), 1981. —352 с.</li>
+        </Box>
+        
+        <Typography variant="h3" sx={{ mt: 3 }}>Про автора</Typography>
+        <Typography paragraph>
+          <strong>Полюга Лев Михайлович</strong> — доктор філологічних наук, професор, автор численних праць з морфеміки та словотвору української мови. Народився у 1939 році. Закінчив Львівський університет імені Івана Франка. Працював на кафедрі української мови цього ж університету. Автор понад 100 наукових праць, зокрема монографій "Морфемний словник" (1983), "Словник українських морфем" (2001), "Словник антонімів" (1987, 1999).
+        </Typography>
+        
+        <Typography paragraph>
+          Основні напрями наукових досліджень: морфеміка, словотвір, лексикографія української мови. Підготував десятки кандидатів і докторів наук. Член редколегій кількох наукових журналів.
+        </Typography>
+      </TabPanel>
+
       <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
         <Button 
           variant="text" 
@@ -856,7 +1412,7 @@ const DictionaryInfo = () => {
         <Button 
           variant="text" 
           color="primary" 
-          disabled={tabValue === 5} 
+          disabled={tabValue === 10} 
           onClick={() => setTabValue(prevValue => prevValue + 1)}
           endIcon={<ArrowIcon />}
         >

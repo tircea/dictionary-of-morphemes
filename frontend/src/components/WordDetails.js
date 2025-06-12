@@ -52,6 +52,11 @@ const ExplanationModal = ({ open, onClose, component }) => {
                 Алломорфи: {component.allomorph}
               </Typography>
             )}
+            {isRoot && component.secondary_root && (
+              <Typography variant="subtitle1" color="primary.main" sx={{ mt: 1, fontWeight: 500 }}>
+                Варіант головного кореня: {component.secondary_root}
+              </Typography>
+            )}
           </Typography>
           <IconButton onClick={onClose} size="small">
             <CloseIcon />
@@ -307,26 +312,34 @@ const WordDetails = ({ word }) => {
           {title}
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {items.map((item, index) => (
-            <Chip
-              key={index}
-              label={item.identification_prefix || item.identification_root || item.identification_suffix}
-              variant="outlined"
-              color="primary"
-              onClick={() => handleComponentClick(item)}
-              sx={{ 
-                m: 0.5,
-                borderRadius: 2,
-                transition: 'all 0.2s ease',
-                cursor: 'pointer',
-                '&:hover': {
-                  backgroundColor: 'primary.light',
-                  color: 'white',
-                  transform: 'translateY(-2px)'
-                }
-              }}
-            />
-          ))}
+          {items.map((item, index) => {
+            // Для корней отдаем приоритет secondary_root, если он существует
+            const isRoot = Boolean(item.identification_root);
+            const componentName = isRoot && item.secondary_root 
+              ? item.secondary_root 
+              : (item.identification_prefix || item.identification_root || item.identification_suffix);
+            
+            return (
+              <Chip
+                key={index}
+                label={componentName}
+                variant="outlined"
+                color="primary"
+                onClick={() => handleComponentClick(item)}
+                sx={{ 
+                  m: 0.5,
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'primary.light',
+                    color: 'white',
+                    transform: 'translateY(-2px)'
+                  }
+                }}
+              />
+            );
+          })}
         </Box>
       </Paper>
     );

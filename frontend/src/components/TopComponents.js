@@ -156,7 +156,7 @@ const TopComponents = ({ onComponentSelect }) => {
           mb: 3
         }}
       >
-        Найпоширеніші компоненти
+        Найчастотніші компоненти
       </Typography>
       
       <Divider sx={{ mb: 3 }} />

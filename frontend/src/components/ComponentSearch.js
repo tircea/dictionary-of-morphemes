@@ -103,6 +103,19 @@ const ComponentSearch = forwardRef(({ onWordSelect }, ref) => {
     return firstProcess;
   };
 
+  const getSecondaryRootInfo = (word) => {
+    if (!word.roots || word.roots.length === 0) {
+      return null;
+    }
+    
+    const rootsWithSecondary = word.roots.filter(root => root.secondary_root);
+    if (rootsWithSecondary.length === 0) {
+      return null;
+    }
+    
+    return rootsWithSecondary.map(root => root.secondary_root).join(', ');
+  };
+
   return (
     <Box sx={{ mt: 3 }}>
       <Grid container spacing={3}>
@@ -168,6 +181,7 @@ const ComponentSearch = forwardRef(({ onWordSelect }, ref) => {
                 <List>
                   {Array.isArray(words) && words.map((word) => {
                     const morphologicalPreview = getMorphologicalPreview(word);
+                    const secondaryRootInfo = componentType === 'root' ? getSecondaryRootInfo(word) : null;
                     
                     return (
                       <ListItem
@@ -182,6 +196,11 @@ const ComponentSearch = forwardRef(({ onWordSelect }, ref) => {
                               <Typography component="span" variant="body2" color="text.primary">
                                 {word.split_word}
                               </Typography>
+                              {secondaryRootInfo && (
+                                <Typography component="span" variant="body2" color="primary.main" sx={{ display: 'block', mt: 0.5, fontWeight: 500 }}>
+                                  Варіант головного кореня: {secondaryRootInfo}
+                                </Typography>
+                              )}
                               {morphologicalPreview && (
                                 <Tooltip title="Морфологічна альтернація">
                                   <Typography component="span" variant="body2" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
