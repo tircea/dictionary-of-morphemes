@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = '/api';
+const API_URL = 'https://localhost:3001/api';
 
 export const searchWord = async (word) => {
   try {
